@@ -31,15 +31,15 @@ impl GLV {
     }
 
     pub fn step(&self, dt: f64) -> Vec<f64> {
-        let rx = match self.r.emul(&self.x) {
-            vmath::ElemResult::Vector(o) => o,
-            _ => vec![0.0; self.n]
-        };
         let interactions = match self.a.dot(&self.x) {
             vmath::DotResult::Vector(o) => o,
             _ => vec![0.0; self.n]
         };
         let one_minus = match vec![1.0; self.n].esub(&interactions) {
+            vmath::ElemResult::Vector(o) => o,
+            _ => vec![0.0; self.n]
+        };
+        let rx = match self.r.emul(&self.x) {
             vmath::ElemResult::Vector(o) => o,
             _ => vec![0.0; self.n]
         };
@@ -58,7 +58,7 @@ impl GLV {
         return new_vals
     }
 
-    fn randomize_coeffs(&mut self, template: Vec<Vec<u8>>) {
+    pub fn randomize_coeffs(&mut self, template: &Vec<Vec<u8>>) {
         assert_eq!(self.a.len(), template.len());
         assert_eq!(self.a[0].len(), template[0].len());
         for i in 0..self.a.len() {
@@ -77,7 +77,7 @@ impl GLV {
         }
     }
 
-    fn simulate(mut model: glv::GLV, state: Vec<f64>, stop: f64, dt: f64) -> Vec<Vec<f64>> {
+    pub fn simulate(mut model: glv::GLV, state: Vec<f64>, stop: f64, dt: f64) -> Vec<Vec<f64>> {
         let times = utils::range(0.0,stop, dt);
         let mut out_vec: Vec<Vec<f64>> = Vec::new();
         out_vec.push(state.clone());
@@ -94,14 +94,14 @@ impl GLV {
         return out_vec
     }
  
-    fn vec_to_mat<T: Copy>(v: &Vec<T>, size: usize) -> Vec<Vec<T>> {
+    pub fn vec_to_mat<T: Copy>(v: &Vec<T>, size: usize) -> Vec<Vec<T>> {
         let vv = v.clone();
         let mut m: Vec<Vec<T>> = Vec::with_capacity(size);
         let mut new_row: Vec<T> = Vec::with_capacity(size);
         
         for i in 0..v.len() {
             new_row.push(vv[i]);
-            if (i > 0) & (i % size == 2) {
+            if (i > 0) & (i % size == (size - 1)) {
                 m.push(new_row.clone());
                 new_row.clear()
             }
@@ -149,7 +149,7 @@ mod test_glv {
                          vec![1, 0, 1],
                          vec![1, 0, 0]];
         
-        glv.randomize_coeffs(graph);
+        glv.randomize_coeffs(&graph);
 
         assert!(glv.a[0][1] > 0.0);
         assert_eq!(glv.a[1][1], 1.0);

@@ -1,9 +1,6 @@
-use crate::utils;
-use crate::vmath;
-use crate::glv;
 use rand::Rng;
 
-struct MGA {
+pub struct MGA {
     pub fitness: fn(&Vec<u8>) -> f64,
     pub fitness_values: Vec<f64>,
     pub pop_size: usize,
@@ -15,7 +12,7 @@ struct MGA {
 }
 
 impl MGA {
-    fn new(ffunc: fn(&Vec<u8>) -> f64, population: usize, genes: usize, 
+    pub fn new(ffunc: fn(&Vec<u8>) -> f64, population: usize, genes: usize, 
            deme: usize, mp: f64, ip: f64) -> MGA {
         // this can break shit
         assert!(population - 1 >= deme);
@@ -84,12 +81,11 @@ impl MGA {
         // pick competitors and get the winners
         let comps = self.pick_competitors(0, false);
         let outs = self.compete(comps[0], comps[1]);
+        println!("{} beats {}", outs[0], outs[1]);
 
         for gene_i in 0..self.genomes[0].len() {
             // infect
             let inf_roll: f64 = rand::thread_rng().gen();
-            println!("{}", self.inf_prob);
-            println!("{}", inf_roll);
             if inf_roll < self.inf_prob {
                 self.genomes[outs[1]][gene_i] = self.genomes[outs[0]][gene_i];
             }
@@ -110,12 +106,13 @@ impl MGA {
         return fit_vec
     }
 
-    fn evolve(&mut self, n_steps: u32) -> Vec<Vec<f64>> {
+    pub fn evolve(&mut self, n_steps: u32) -> Vec<Vec<f64>> {
         let mut fit_record: Vec<Vec<f64>> = Vec::new();
 
         for _ in 0..n_steps {
             self.step();
             fit_record.push(self.get_fitness());
+            println!("Step Complete");
         }
 
         return fit_record
