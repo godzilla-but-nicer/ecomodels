@@ -1,24 +1,22 @@
-use std::ops;
-
-enum DotResult {
+pub enum DotResult {
     Scalar(f64),
     Vector(Vec<f64>),
 }
 
-enum ElemResult {
+pub enum ElemResult {
     Vector(Vec<f64>),
     Matrix(Vec<Vec<f64>>),
 }
 
-trait VMath {
+pub trait VMath {
     fn dot(&self, x: &Vec<f64>) -> DotResult;
 }
 
-trait EMath {
-    fn eadd(self, x: &Vec<f64>) -> ElemResult;
-    fn esub(self, x: &Vec<f64>) -> ElemResult;
-    fn ediv(self, x: &Vec<f64>) -> ElemResult;
-    fn emul(self, x: &Vec<f64>) -> ElemResult;
+pub trait EMath {
+    fn eadd(&self, x: &Vec<f64>) -> ElemResult;
+    fn esub(&self, x: &Vec<f64>) -> ElemResult;
+    fn ediv(&self, x: &Vec<f64>) -> ElemResult;
+    fn emul(&self, x: &Vec<f64>) -> ElemResult;
 }
 
 impl VMath for Vec<f64> {
@@ -32,7 +30,7 @@ impl VMath for Vec<f64> {
     }
 }
 impl EMath for Vec<f64> {
-    fn eadd(self, x: &Vec<f64>) -> ElemResult {
+    fn eadd(&self, x: &Vec<f64>) -> ElemResult {
         assert_eq!(self.len(), x.len());
         let mut out = vec![0.0; x.len()];
         for i in 0..x.len() {
@@ -41,7 +39,7 @@ impl EMath for Vec<f64> {
         return ElemResult::Vector(out);
     }
     
-    fn esub(self, x: &Vec<f64>) -> ElemResult {
+    fn esub(&self, x: &Vec<f64>) -> ElemResult {
         assert_eq!(self.len(), x.len());
         let mut out = vec![0.0; x.len()];
         for i in 0..x.len() {
@@ -50,7 +48,7 @@ impl EMath for Vec<f64> {
         return ElemResult::Vector(out);
     }
     
-    fn emul(self, x: &Vec<f64>) -> ElemResult {
+    fn emul(&self, x: &Vec<f64>) -> ElemResult {
         assert_eq!(self.len(), x.len());
         let mut out = vec![0.0; x.len()];
         for i in 0..x.len() {
@@ -60,7 +58,7 @@ impl EMath for Vec<f64> {
     }
     
     
-    fn ediv(self, x: &Vec<f64>) -> ElemResult {
+    fn ediv(&self, x: &Vec<f64>) -> ElemResult {
         assert_eq!(self.len(), x.len());
         let mut out = vec![0.0; x.len()];
         for i in 0..x.len() {
