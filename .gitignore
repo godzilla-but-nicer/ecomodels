@@ -9,6 +9,14 @@ Cargo.lock
 *.svg
 
 # weird TeX shit
-*.pdf
+*.aux
+*.fdb_*
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.sync*
+*.toc
 
 

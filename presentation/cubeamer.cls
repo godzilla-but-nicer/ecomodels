@@ -180,7 +180,7 @@
 % Footer
 \setbeamertemplate{footline}{%
     \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-        \includegraphics[height = 0.6cm]{img/iu_trident_cropped.png}
+        \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
         \hfill
         \raisebox{0.22cm}{
             \insertshortauthor
@@ -207,7 +207,7 @@
     \apptocmd{\appendix}{%
         \setbeamertemplate{footline}{%
         \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-            \includegraphics[height = 0.6cm]{img/iu_trident_cropped.png}
+            \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
             \hfill
             \raisebox{0.22cm}{
                 \insertshortauthor
@@ -249,7 +249,7 @@
     {
         \setbeamertemplate{footline}{
            \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-                \includegraphics[height = 0.6cm]{img/iu_trident_cropped.png}
+                \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
                 \hfill
                 \raisebox{0.22cm}{
                     \insertshortauthor
@@ -317,7 +317,7 @@
         \setbeamercolor{normal text}{fg = white, bg = black}
         \setbeamertemplate{footline}{
             \begin{beamercolorbox}[wd = \textwidth, ht = 1.2cm, sep = 0.4cm]{footer}
-                \includegraphics[height = 0.6cm]{img/iu_trident_cropped.png}
+                \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
                 \hfill
                 \ifdefined\@copyrightnotice
                     \raisebox{0.22cm}{
