@@ -11,59 +11,70 @@ use sbmga::MGA;
 // external crates
 use rand::Rng;
 use std::fs::File;
+use std::fs::create_dir;
 use std::io::{Error, Write};
 
 
 fn main() -> Result<(), Error> {
     // GA Constants
-    let species = 5;
+    let species = 10;
     let num_genes = species * species;
-    let gapop = 5;
-    let deme = 1;
-    let pinfect = 0.3;
-    let pmutate = 0.03;
-    let evosteps = 10;
+    let gapop = 30;
+    let deme = 8;
+    let pinfect = 0.2;
+    let pmutate = 0.01;
+    let evosteps = 901;
+    let save_every = gapop * 2;
 
     // initialize GA
     let mut mga = MGA::new(coexistence_search, gapop, num_genes, deme, pmutate, pinfect);
-    let fitness_history = mga.evolve(evosteps);
-    
-    //let mut mvec: Vec<u8> = Vec::new();
-    //for _ in 0..num_genes {
-    //    mvec.push(rand::thread_rng().gen_range(0..2));
-    //}
-    //let mat = GLV::vec_to_mat(&mvec, 5);
-    //let mut glv = GLV::new(5);
-    //glv.randomize_coeffs(&mat);
-    //let emat = glv.a.clone();
-    //let fitness_history = GLV::simulate(glv, vec![0.1, 0.2, 0.3, 0.8, 0.7], 50.0, 0.01);
 
-    let mut fout = File::create("data/fitness.csv")?;
-    write!(fout, "time,");
+    // build file structure
+    // file for tracking fitness in time
+    let mut ffit = File::create("data/fitness.csv")?;
+    write!(ffit, "time,");
     for sp in 0..gapop {
-        write!(fout, "{},", sp);
+        write!(ffit, "{},", sp);
     }
-    write!(fout, "\n");
-    let times = range(0.0, 50.0, 0.01);
-    for i in 0..fitness_history.len() {
-        write!(fout, "{},", times[i]);
+    write!(ffit, "\n");
+    // directory for network structures
+    create_dir("data/networks")?;
+    
+    for i in 0..(evosteps / save_every) {
+        // evole for some steps
+        let fitness_history = mga.evolve(save_every as u32);
+        
+        // write "time" for the fitness file
+        write!(ffit, "{},", (i*save_every) as i32);
+        // network dir for this time step
+        create_dir(format!("data/networks/{}", i*save_every))?;
+        
+        // lots to do in this loop over genomes
         for j in 0..gapop {
-            write!(fout, "{},", fitness_history[i][j]);
-        }
-        write!(fout, "\n");
-    }
-    //for i in 0..species {
-    //    println!("[{},{},{},{},{}]", emat[i][0], emat[i][1], emat[i][2], emat[i][3], emat[i][4]);
-    //}
+            // first just write the fitness value
+            write!(ffit, "{},", fitness_history[j]);
+            // next make a file for the network structure and write to it
+            let mut fnet = File::create(format!("data/networks/{}/{}_adjmat_{}.csv", i*save_every, j, species))?;
+            let adjmat = GLV::vec_to_mat(&mga.genomes[j], species);
+            for spi in 0..species {
+                for spj in 0..species {
+                    write!(fnet, "{},", adjmat[spi][spj]);
+                }
+                write!(fnet, "\n");
+            }
 
+        }
+        // this adds the newline we need at the end of the fitness line
+        write!(ffit, "\n");
+    }
     Ok(())
 }
 
 fn coexistence_search(genome: &Vec<u8>) -> f64 {
     // GLV Constants
-    let species = 5;
+    let species = 10;
     let coeffs = 10;
-    let starts = 10;
+    let starts = 3;
     let total = coeffs * starts;
     let simtime = 50.0;
     let simtimedt = 0.01;
@@ -99,13 +110,18 @@ fn coexistence_search(genome: &Vec<u8>) -> f64 {
      
     // We will score each of these end states with species richness
     let mut s_avg = 0.0;
-    for ev in end_vec {
-        for spec in ev {
-            if spec > 0.01 {
+    for i in 0..end_vec.len() {
+        for j in 0..end_vec[0].len() {
+            if end_vec[i][j] > 0.01 {
                 s_avg += 1.0 / (total as f64);
             }
         }
     }
     let s_norm = s_avg / (species as f64);
     return s_norm
+}
+
+fn neutral_search(genome: &Vec<u8>) -> f64 {
+    let fit: f64 = rand::thread_rng().gen();
+    return fit
 }

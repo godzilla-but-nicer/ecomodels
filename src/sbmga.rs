@@ -1,4 +1,6 @@
 use rand::Rng;
+use std::thread;
+use std::sync::mpsc;
 
 pub struct MGA {
     pub fitness: fn(&Vec<u8>) -> f64,
@@ -83,7 +85,7 @@ impl MGA {
         let outs = self.compete(comps[0], comps[1]);
         println!("{} beats {}", outs[0], outs[1]);
 
-        for gene_i in 0..self.genomes[0].len() {
+        for gene_i in 0..self.gene_size {
             // infect
             let inf_roll: f64 = rand::thread_rng().gen();
             if inf_roll < self.inf_prob {
@@ -100,22 +102,21 @@ impl MGA {
 
     fn get_fitness(&self) -> Vec<f64> {
         let mut fit_vec: Vec<f64> = Vec::new();
-        for i in 0..self.genomes.len() {
+        for i in 0..self.pop_size {
             fit_vec.push((self.fitness)(&self.genomes[i]));
         }
         return fit_vec
     }
 
-    pub fn evolve(&mut self, n_steps: u32) -> Vec<Vec<f64>> {
+    pub fn evolve(&mut self, n_steps: u32) -> Vec<f64> {
         let mut fit_record: Vec<Vec<f64>> = Vec::new();
 
         for _ in 0..n_steps {
             self.step();
-            fit_record.push(self.get_fitness());
-            println!("Step Complete");
+            println!("Step");
         }
-
-        return fit_record
+        
+        return self.get_fitness();
     }
 }
 
@@ -183,10 +184,9 @@ mod test_mga {
 
         // get competitors
         let fit_history = mga.evolve(30);
-        let last_i = fit_history.len() - 1;
         let mut sum: f64 = 0.0;
-        for j in 0..fit_history[last_i].len() {
-            sum += fit_history[last_i][j] / 3.0;
+        for j in 0..fit_history.len() {
+            sum += fit_history[j] / 3.0;
         }
 
         assert_eq!(sum, 3.0)

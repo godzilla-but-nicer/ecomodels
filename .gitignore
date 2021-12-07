@@ -1,3 +1,14 @@
 /target
 /data/*
 Cargo.lock
+/src/backup
+
+# figures
+*.pdf
+*.png
+*.svg
+
+# weird TeX shit
+*.pdf
+
+
