@@ -23,7 +23,7 @@ fn main() -> Result<(), Error> {
     let deme = 8;
     let pinfect = 0.2;
     let pmutate = 0.01;
-    let evosteps = 901;
+    let evosteps = 5602;
     let save_every = gapop * 2;
 
     // initialize GA
@@ -31,14 +31,14 @@ fn main() -> Result<(), Error> {
 
     // build file structure
     // file for tracking fitness in time
-    let mut ffit = File::create("data/fitness.csv")?;
+    let mut ffit = File::create("data/fitness3.csv")?;
     write!(ffit, "time,");
     for sp in 0..gapop {
         write!(ffit, "{},", sp);
     }
     write!(ffit, "\n");
     // directory for network structures
-    create_dir("data/networks")?;
+    create_dir("data/networks3")?;
     
     for i in 0..(evosteps / save_every) {
         // evole for some steps
@@ -47,14 +47,14 @@ fn main() -> Result<(), Error> {
         // write "time" for the fitness file
         write!(ffit, "{},", (i*save_every) as i32);
         // network dir for this time step
-        create_dir(format!("data/networks/{}", i*save_every))?;
+        create_dir(format!("data/networks3/{}", i*save_every))?;
         
         // lots to do in this loop over genomes
         for j in 0..gapop {
             // first just write the fitness value
             write!(ffit, "{},", fitness_history[j]);
             // next make a file for the network structure and write to it
-            let mut fnet = File::create(format!("data/networks/{}/{}_adjmat_{}.csv", i*save_every, j, species))?;
+            let mut fnet = File::create(format!("data/networks3/{}/{}_adjmat_{}.csv", i*save_every, j, species))?;
             let adjmat = GLV::vec_to_mat(&mga.genomes[j], species);
             for spi in 0..species {
                 for spj in 0..species {

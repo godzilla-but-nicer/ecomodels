@@ -177,53 +177,6 @@
 \alt{\beamer@makemycovered}{\beamer@fakeinvisible}}
 \def\c@slideinframe{\beamer@slideinframe}
 
-% Footer
-\setbeamertemplate{footline}{%
-    \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-        \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
-        \hfill
-        \raisebox{0.22cm}{
-            \insertshortauthor
-            \quad
-            \textbullet
-            \quad
-            \insertsubtitle
-            \quad
-            |
-            \quad
-            \insertsection
-            \quad
-            \textbullet
-            \quad
-            \usebeamertemplate{frame numbering}
-        }
-        \hfill
-        % \includegraphics[height = 0.6cm]{img/aems.pdf}
-    \end{beamercolorbox}%
-}
-
-% Keep footer in appendix
-\AtBeginDocument{%
-    \apptocmd{\appendix}{%
-        \setbeamertemplate{footline}{%
-        \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-            \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
-            \hfill
-            \raisebox{0.22cm}{
-                \insertshortauthor
-                \quad
-                \textbullet
-                \quad
-                \insertsubtitle
-                \quad
-            }
-            \hfill
-            % \includegraphics[height = 0.6cm]{img/aems.pdf}
-        \end{beamercolorbox}%
-    }
-    }{}{}
-}
-
 % % Use full section name in section pages
 % \setbeamertemplate{section page}{
 %     \centering
@@ -244,56 +197,6 @@
 %   \vspace{\baselineskip}
 % }
 
-% Add footer to section pages
-\AtBeginSection{
-    {
-        \setbeamertemplate{footline}{
-           \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-                \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
-                \hfill
-                \raisebox{0.22cm}{
-                    \insertshortauthor
-                    \quad
-                    \textbullet
-                    \quad
-                    \insertshortsubtitle
-                }
-                \hfill
-                % \includegraphics[height = 0.6cm]{img/aems.pdf}
-            \end{beamercolorbox}%
-        }
-        \frame{
-            \sectionpage
-        }
-        \addtocounter{framenumber}{-1}
-    }
-}
-
-% Add footer to subsection pages
-\AtBeginSubsection{
-    {
-        \setbeamertemplate{footline}{
-           \begin{beamercolorbox}[wd = \textwidth, ht = 1cm, sep = 0.2cm]{footer}
-                \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
-                \hfill
-                \raisebox{0.22cm}{
-                    \insertshortauthor
-                    \quad
-                    \textbullet
-                    \quad
-                    \insertshortsubtitle
-                }
-                \hfill
-                % \includegraphics[height = 0.6cm]{img/aems.pdf}
-            \end{beamercolorbox}%
-        }
-        \frame{
-            \sectionpage
-        }
-        \addtocounter{framenumber}{-1}
-    }
-}
-
 % If one wants to modify the title page... here's the default code
 \setbeamertemplate{title page}{%
     \begin{minipage}[b][\paperheight]{\textwidth}%
@@ -308,41 +211,6 @@
         \vfill%
         \vspace*{1mm}%
     \end{minipage}%
-}
-
-% Add footer to title page
-\newcommand*{\copyrightnotice}[1]{\def\@copyrightnotice{#1}}
-\renewcommand{\maketitle}[1][\item Welcome, everyone!]{
-    \begingroup
-        \setbeamercolor{normal text}{fg = white, bg = black}
-        \setbeamertemplate{footline}{
-            \begin{beamercolorbox}[wd = \textwidth, ht = 1.2cm, sep = 0.4cm]{footer}
-                \includegraphics[height = 0.6cm]{assets/iu_trident_cropped.png}
-                \hfill
-                \ifdefined\@copyrightnotice
-                    \raisebox{0.22cm}{
-                        \begin{minipage}{0.65\paperwidth}
-                            \begin{flushright}
-                                Copyright~\copyright~by \insertshortauthor, \insertshortinstitute
-                                \ifx\@copyrightnotice\@empty
-                                \else
-                                    \\
-                                    \@copyrightnotice
-                                \fi
-                            \end{flushright}
-                        \end{minipage}
-                    }
-                \fi
-                % \includegraphics[height = 0.8cm]{img/aems.pdf}
-            \end{beamercolorbox}
-        }
-        \begin{frame}
-            \usebeamertemplate{title page}
-            \vspace*{-50pt}
-        \end{frame}
-        \note[itemize]{#1}
-        \addtocounter{framenumber}{-1}
-    \endgroup
 }
 
 % Table of Contents with "Outline" section name

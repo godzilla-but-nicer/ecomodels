@@ -29,9 +29,9 @@
             \end{itemize}
         \end{column}
         \begin{column}{0.3\textwidth}
-            \begin{figure*}
+            \begin{figure}
                 \includegraphics[width=\textwidth]{assets/big-dog.png}
-            \end{figure*}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
@@ -49,44 +49,64 @@
             \end{itemize}
         \end{column}
         \begin{column}{0.3\textwidth}
-            \begin{figure*}
+            \begin{figure}
                 \includegraphics[width=\textwidth]{assets/little-dog.png}
-            \end{figure*}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
 
-\begin{frame}{Mutual Information}
-    \begin{columns}
-        \begin{column}{0.4\textwidth}
-            \begin{align*}
-                I(X:Y) &= H(X) - H(X \mid Y) \\
-                       &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log_2 \frac{p(x,y)}{p(x)p(y)}
-            \end{align*}
-        \end{column}
-        \begin{column}{0.6\textwidth}
-            img here
-        \end{column}
-    \end{columns}
+\section{Background}
+
+\begin{frame}{The Paradox of the Plankton --- Hutchinson 1961 [cite]}
+    \begin{figure}
+        \includegraphics[width=0.9\textwidth]{assets/real-plankton.jpeg}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Conditional Mutual Information}
+\begin{frame}{The Paradox of the Plankton --- Hutchinson 1961}
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{assets/real-plankton1.jpeg}
+    \end{figure}
+    \begin{center}
+        How can species coexist while competing for limited resources?
+    \end{center}
+\end{frame}
+
+\begin{frame}{Resolutions to the Paradox}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            What if we want to ask:
-            
-            \textbf{How much less uncertainty do we have about $X$ after observing $Y$ given that we have already observed $Z$?}
+            \begin{enumerate}
+                \item Niche Partitioning:
+                \begin{itemize}
+                    \item Differences in requirements \textit{and} impacts
+                    \item Species stay out of each other's way
+                    \item Tilman 1982
+                \end{itemize}
+                \item Storage Effect:
+                \begin{itemize}
+                    \item Mechanism to attenuate competitive effort
+                    \item Species Opt-out of competition in bad times
+                    \item Chesson 1994
+                \end{itemize}
+            \end{enumerate}
         \end{column}
         \begin{column}{0.5\textwidth}
-            Using our \textit{chain rule} we get:
-            \begin{align*}
-                I(X:Y \mid Z) = H(X \mid Z) - H(X \mid Y,Z)
-            \end{align*}
+            \begin{figure}
+                \includegraphics[width=0.95\textwidth]{assets/letten_niche.png}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
 
-\begin{frame}{What is it good for?}
+\begin{frame}{Nontransitive competition --- May and Leonard 1975}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{itemize}
+                \item Species all keep one another in check
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Transfer Entropy}
