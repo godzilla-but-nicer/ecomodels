@@ -19,6 +19,7 @@ pub trait EMath {
     fn emul(&self, x: &Vec<f64>) -> ElemResult;
 }
 
+
 impl VMath for Vec<f64> {
     fn dot(&self, x: &Vec<f64>) -> DotResult{
         assert_eq!(self.len(), x.len());
@@ -150,6 +151,7 @@ mod test_vmath {
         assert_eq!(v3, vec![2.0, 8.0])
     }
     
+
     #[test]
     fn test_dot_vec() {
         let m = vec![vec![1.0, 2.0],

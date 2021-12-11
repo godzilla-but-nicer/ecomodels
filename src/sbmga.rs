@@ -1,6 +1,7 @@
 use rand::Rng;
 use std::thread;
 use std::sync::mpsc;
+use crate::utils::hamming;
 
 pub struct MGA {
     pub fitness: fn(&Vec<u8>) -> f64,
@@ -100,6 +101,56 @@ impl MGA {
         }
     }
 
+    fn compete_novelty(&mut self, i: usize, j: usize) -> [usize; 2] {
+        let mut fit_i: usize = 0;
+        let mut fit_j: usize = 0;
+        let mut dist: usize;
+        // maximize hamming distance for fitness
+        for k in 0..self.pop_size {
+            dist = hamming(&self.genomes[i], &self.genomes[k]);
+            if dist > fit_i {
+                fit_i = dist;
+            }
+            dist = hamming(&self.genomes[j], &self.genomes[k]);
+            if dist > fit_j {
+                fit_j = dist;
+            }
+        }
+        // init win lose idx
+        let win: usize;
+        let lose: usize;
+
+        // determine tournament outcome
+        if fit_i > fit_j {
+            win = i;
+            lose = j;
+        } else {
+            win = j;
+            lose = i;
+        }
+        return [win, lose];
+    }
+
+    fn step_novelty(&mut self) {
+        let comps = self.pick_competitors(0, false);
+        let outs = self.compete_novelty(comps[0], comps[1]);
+        println!("{} beats {}", outs[0], outs[1]);
+
+        for gene_i in 0..self.gene_size {
+            // infect
+            let inf_roll: f64 = rand::thread_rng().gen();
+            if inf_roll < self.inf_prob {
+                self.genomes[outs[1]][gene_i] = self.genomes[outs[0]][gene_i];
+            }
+
+            // mutate
+            let mut_roll: f64 = rand::thread_rng().gen();
+            if mut_roll < self.mut_prob {
+                self.genomes[outs[1]][gene_i] = (self.genomes[outs[1]][gene_i] + 1) % 2;
+            }
+        }
+    }
+
     fn get_fitness(&self) -> Vec<f64> {
         let mut fit_vec: Vec<f64> = Vec::new();
         for i in 0..self.pop_size {
@@ -109,13 +160,20 @@ impl MGA {
     }
 
     pub fn evolve(&mut self, n_steps: u32) -> Vec<f64> {
-        let mut fit_record: Vec<Vec<f64>> = Vec::new();
-
         for _ in 0..n_steps {
             self.step();
             println!("Step");
         }
         
+        return self.get_fitness();
+    }
+
+    pub fn evolve_novelty(&mut self, n_steps: u32) -> Vec<f64> {
+        for _ in 0..n_steps {
+            self.step_novelty();
+            println!("Novelty Step");
+        }
+
         return self.get_fitness();
     }
 }
@@ -190,5 +248,19 @@ mod test_mga {
         }
 
         assert_eq!(sum, 3.0)
+    }
+
+    #[test]
+    fn test_compete_novelty() {
+        // initialize and set matrix to known solution
+        let mut mga = MGA::new(ffunc_test, 3, 3, 2, 0.0, 1.0);
+        mga.genomes = vec![vec![0, 0, 1],
+                           vec![1, 1, 1],
+                           vec![0, 0, 0]];
+        
+        let out = mga.compete_novelty(0, 1);
+        assert_eq!(out[0], 1);
+        assert_eq!(out[1], 0);
+
     }
 }

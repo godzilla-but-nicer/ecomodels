@@ -17,13 +17,14 @@ use std::io::{Error, Write};
 
 fn main() -> Result<(), Error> {
     // GA Constants
-    let species = 10;
+    let species = 20;
     let num_genes = species * species;
-    let gapop = 30;
-    let deme = 8;
-    let pinfect = 0.2;
-    let pmutate = 0.01;
-    let evosteps = 5602;
+    let gapop = 40;
+    let deme = 3;
+    let pinfect = 0.1;
+    let pmutate = 0.03;
+    let nov_steps = 500;
+    let evosteps = 3000;
     let save_every = gapop * 2;
 
     // initialize GA
@@ -31,14 +32,23 @@ fn main() -> Result<(), Error> {
 
     // build file structure
     // file for tracking fitness in time
-    let mut ffit = File::create("data/fitness3.csv")?;
+    let iter_file = "4";
+    let mut ffit = File::create(format!("data/fitness_nov{}.csv", iter_file))?;
     write!(ffit, "time,");
     for sp in 0..gapop {
         write!(ffit, "{},", sp);
     }
     write!(ffit, "\n");
     // directory for network structures
-    create_dir("data/networks3")?;
+    create_dir(format!("data/networks_nov{}", iter_file))?;
+
+    // Novelty Search (start at time -1 i guess)
+    write!(ffit, "{},", -1);
+    let novfit = mga.evolve_novelty(nov_steps);
+    for j in 0..gapop {
+        write!(ffit, "{},", novfit[j]);
+    }
+    write!(ffit, "\n");
     
     for i in 0..(evosteps / save_every) {
         // evole for some steps
@@ -47,14 +57,14 @@ fn main() -> Result<(), Error> {
         // write "time" for the fitness file
         write!(ffit, "{},", (i*save_every) as i32);
         // network dir for this time step
-        create_dir(format!("data/networks3/{}", i*save_every))?;
+        create_dir(format!("data/networks_nov{}/{}", iter_file, i*save_every))?;
         
         // lots to do in this loop over genomes
         for j in 0..gapop {
             // first just write the fitness value
             write!(ffit, "{},", fitness_history[j]);
             // next make a file for the network structure and write to it
-            let mut fnet = File::create(format!("data/networks3/{}/{}_adjmat_{}.csv", i*save_every, j, species))?;
+            let mut fnet = File::create(format!("data/networks_nov{}/{}/{}_adjmat_{}.csv", iter_file, i*save_every, j, species))?;
             let adjmat = GLV::vec_to_mat(&mga.genomes[j], species);
             for spi in 0..species {
                 for spj in 0..species {
@@ -72,11 +82,11 @@ fn main() -> Result<(), Error> {
 
 fn coexistence_search(genome: &Vec<u8>) -> f64 {
     // GLV Constants
-    let species = 10;
-    let coeffs = 10;
+    let species = 20;
+    let coeffs = 100;
     let starts = 3;
     let total = coeffs * starts;
-    let simtime = 50.0;
+    let simtime = 30.0;
     let simtimedt = 0.01;
 
     // set everything up
@@ -119,9 +129,4 @@ fn coexistence_search(genome: &Vec<u8>) -> f64 {
     }
     let s_norm = s_avg / (species as f64);
     return s_norm
-}
-
-fn neutral_search(genome: &Vec<u8>) -> f64 {
-    let fit: f64 = rand::thread_rng().gen();
-    return fit
 }
