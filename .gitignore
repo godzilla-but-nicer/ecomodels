@@ -1,12 +1,17 @@
+# dirs not to keep
 /target
+/data/*.csv
 /data/*
 Cargo.lock
 /src/backup
+*/__pycache__/
 
 # figures
 *.pdf
 *.png
 *.svg
+*.jpeg
+*.jpg
 
 # weird TeX shit
 *.aux
@@ -19,8 +24,6 @@ Cargo.lock
 *.sync*
 *.toc
 
-
-*.jpeg
-*.jpg
+# animations
 *.mp4
 *.gif
