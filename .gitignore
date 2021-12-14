@@ -1,7 +1,7 @@
 # dirs not to keep
 /target
 /data/*.csv
-/data/*
+/data/*/*
 Cargo.lock
 /src/backup
 */__pycache__/
