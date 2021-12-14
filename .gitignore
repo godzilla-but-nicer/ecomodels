@@ -4,6 +4,7 @@
 /data/*/*
 Cargo.lock
 /src/backup
+/notebooks/*.py
 */__pycache__/
 
 # figures
